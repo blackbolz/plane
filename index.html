@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLANE - Boarding Pass</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: white;
+            font-family: 'Roboto', sans-serif;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main-title {
+            font-family: 'Bungee', cursive;
+            font-size: 5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 50px;
+            text-align: center;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
+            letter-spacing: 8px;
+            background: linear-gradient(45deg, #00ff00, #00cc00, #ffff00, #00ff00);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .boarding-pass {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            width: 1158px;
+            height: 500px;
+            position: relative;
+        }
+
+        .boarding-pass::after {
+            content: '';
+            position: absolute;
+            right: 320px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent,
+                transparent 6px,
+                #333 6px,
+                #333 12px
+            );
+            z-index: 2;
+        }
+
+        .pass-header {
+            background: linear-gradient(135deg, #00ff00 0%, #00dd00 100%);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100px;
+        }
+
+        .airline-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .plane-icon {
+            width: 40px;
+            height: 40px;
+            fill: white;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .company-name {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .pass-type {
+            color: white;
+            text-align: right;
+        }
+
+        .executive-class {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .boarding-pass-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .pass-content {
+            background: white;
+            display: flex;
+            height: 400px;
+        }
+
+        .left-section {
+            width: 120px;
+            display: flex;
+            background: white;
+            padding: 20px 0;
+            justify-content: center;
+            align-items: stretch;
+        }
+
+        .vertical-qr-placeholder {
+            width: 80px;
+            height: 100%;
+            background: #ddd;
+            border: 2px dashed #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: #666;
+            border-radius: 4px;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+
+        .main-section {
+            flex: 1;
+            padding: 40px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .top-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .middle-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .ca-info {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .bottom-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 2px solid #e0e0e0;
+            padding-top: 15px;
+        }
+
+        .left-group {
+            display: flex;
+            gap: 80px;
+        }
+
+        .right-group {
+            display: flex;
+            gap: 80px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .label {
+            font-size: 0.8rem;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        /* Blue label for seat */
+        .label.seat-label {
+            color: #2c5aa0;
+            font-weight: bold;
+        }
+
+        .value {
+            font-size: 1.4rem;
+            color: #2c5aa0;
+            font-weight: bold;
+        }
+
+        .name-value {
+            font-size: 1.6rem;
+            color: #2c5aa0;
+            font-weight: bold;
+            cursor: default;
+        }
+
+        /* MODIFIED: Smaller seat display */
+        .top-seat-display {
+            background: #2c5aa0 !important;
+            color: white !important;
+            padding: 20px 30px;  /* Reduced from 30px 45px */
+            border-radius: 0px;   /* Removed round edges */
+            font-size: 2.5rem;     /* Reduced from 3.5rem */
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 6px 15px rgba(44, 90, 160, 0.4);  /* Reduced shadow */
+            margin-left: 0px;    /* Reset margin since parent has positioning */
+            cursor: default;
+        }
+
+        .seat-display {
+            background: #2c5aa0;
+            color: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(44, 90, 160, 0.3);
+        }
+
+        .stub {
+            width: 320px;
+            background: linear-gradient(180deg, #f8f8f8 0%, #eeeeee 100%);
+            display: flex;
+            flex-direction: column;
+            padding: 40px 30px;
+            border-left: 3px dashed #333;
+            position: relative;
+        }
+
+        .stub-header {
+            background: linear-gradient(135deg, #00ff00 0%, #00dd00 100%);
+            color: white;
+            padding: 10px 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1rem;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .stub-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex-grow: 1;
+        }
+
+        .stub-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stub-label {
+            font-size: 0.8rem;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .stub-value {
+            font-size: 1rem;
+            color: #2c5aa0;
+            font-weight: bold;
+        }
+
+        .route-with-plane {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 10px 0;
+        }
+
+        .plane-route-icon {
+            width: 25px;
+            height: 25px;
+            fill: #2c5aa0;
+        }
+
+        .qr-placeholder {
+            width: 100%;
+            height: 80px;
+            background: #ddd;
+            border: 2px dashed #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 50px;
+            border-radius: 4px;
+        }
+
+        .editable {
+            background: rgba(255, 255, 0, 0.1);
+            padding: 2px 4px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .editable:hover {
+            background: rgba(255, 255, 0, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* Non-editable blue text - no hover effects or cursor pointer */
+        .non-editable {
+            cursor: default;
+        }
+
+        .edit-mode {
+            background: white;
+            border: 2px solid #007bff;
+            outline: none;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-size: inherit;
+            font-weight: inherit;
+            color: inherit;
+        }
+
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 3rem;
+                letter-spacing: 4px;
+            }
+            
+            .boarding-pass::after {
+                display: none;
+            }
+            
+            .pass-content {
+                flex-direction: column;
+            }
+            
+            .stub {
+                width: 100%;
+                border-left: none;
+                border-top: 3px dashed #333;
+            }
+            
+            .left-group, .right-group {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 class="main-title">PLANE</h1>
+    
+    <div class="boarding-pass">
+        <div class="pass-header">
+            <div class="airline-info">
+                <svg class="plane-icon" viewBox="0 0 24 24">
+                    <path d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z"/>
+                </svg>
+                <span class="company-name non-editable">PLANECOIN - BUSINESS CLASS</span>
+            </div>
+            <div class="pass-type">
+                <div class="executive-class">EXECUTIVE CLASS</div>
+                <div class="boarding-pass-text">BOARDING PASS</div>
+            </div>
+        </div>
+        
+        <div class="pass-content">
+            <div class="left-section">
+                <img src="images/verticalqr.png" alt="Vertical QR Code" style="width: 80px; height: 100%; object-fit: cover; border-radius: 4px;">
+            </div>
+            
+            <div class="main-section">
+                <div class="top-info">
+                    <div class="info-item">
+                        <div class="label">Name</div>
+                        <div class="name-value non-editable">$PLANE</div>
+                    </div>
+                    <div class="info-item" style="margin-left: 220px;">
+                        <div class="label seat-label">Seat</div>
+                        <div class="top-seat-display non-editable">SEAT</div>
+                    </div>
+                </div>
+                
+                <div class="middle-info">
+                    <div class="left-group">
+                        <div class="info-item">
+                            <div class="label">Flight</div>
+                            <div class="value non-editable">01234</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Gate</div>
+                            <div class="value non-editable">03</div>
+                        </div>
+                    </div>
+                    <div class="right-group">
+                        <div class="info-item">
+                            <div class="label">Seat</div>
+                            <div class="value non-editable">20 A</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Time</div>
+                            <div class="value non-editable">04:20</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ca-info">
+                    <div class="info-item">
+                        <div class="label">CA</div>
+                        <div class="value non-editable">soon</div>
+                    </div>
+                </div>
+                
+                <div class="bottom-info">
+                    <div class="left-group">
+                        <div class="info-item">
+                            <div class="label">From</div>
+                            <div class="value non-editable">PUMP</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">To</div>
+                            <div class="value non-editable">MOON</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stub">
+                <div class="stub-header">BOARDING PASS</div>
+                
+                <div class="stub-info">
+                    <div class="stub-row">
+                        <span class="stub-label">Flight</span>
+                        <span class="stub-value non-editable">01234</span>
+                    </div>
+                    
+                    <div class="stub-row">
+                        <span class="stub-label">Gate</span>
+                        <span class="stub-value non-editable">03</span>
+                    </div>
+                    
+                    <div class="stub-row">
+                        <span class="stub-label">Seat</span>
+                        <span class="stub-value non-editable">20 A</span>
+                    </div>
+                    
+                    <div class="stub-row">
+                        <span class="stub-label">Time</span>
+                        <span class="stub-value non-editable">04:20</span>
+                    </div>
+                    
+                    <div class="stub-row">
+                        <span class="stub-label">From</span>
+                        <span class="stub-value non-editable">PUMP</span>
+                    </div>
+                    
+                    <div class="route-with-plane">
+                        <span class="stub-value non-editable">PUMP</span>
+                        <svg class="plane-route-icon" viewBox="0 0 24 24">
+                            <path d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z"/>
+                        </svg>
+                        <span class="stub-value non-editable">MOON</span>
+                    </div>
+                </div>
+                
+                <img src="images/horizontalqr.png" alt="QR Code" style="width: 100%; height: 80px; object-fit: cover; border-radius: 4px; margin-top: -15px;">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function editText(element) {
+            // Don't allow editing if element has non-editable class
+            if (element.classList.contains('non-editable') || element.classList.contains('edit-mode')) return;
+            
+            const originalText = element.textContent;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = originalText;
+            input.className = element.className.replace('editable', 'edit-mode');
+            
+            const computedStyle = window.getComputedStyle(element);
+            input.style.fontSize = computedStyle.fontSize;
+            input.style.fontWeight = computedStyle.fontWeight;
+            input.style.color = computedStyle.color;
+            input.style.fontFamily = computedStyle.fontFamily;
+            
+            element.parentNode.replaceChild(input, element);
+            input.focus();
+            input.select();
+            
+            function finishEdit() {
+                const newText = input.value || originalText;
+                const newElement = document.createElement('span');
+                newElement.className = element.className;
+                newElement.textContent = newText;
+                newElement.onclick = () => editText(newElement);
+                
+                input.parentNode.replaceChild(newElement, input);
+            }
+            
+            input.addEventListener('blur', finishEdit);
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    finishEdit();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
