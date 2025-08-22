@@ -27,7 +27,7 @@
             font-size: 5rem;
             font-weight: bold;
             color: #333;
-            margin-bottom: 50px;
+            margin-bottom: 20px;
             text-align: center;
             text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
             letter-spacing: 8px;
@@ -37,6 +37,34 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             animation: gradientShift 3s ease-in-out infinite;
+        }
+
+        .buy-button {
+            background: linear-gradient(135deg, #2c5aa0 0%, #1e3a6f 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            font-family: 'Comic Sans MS', 'Chalkduster', 'Bradley Hand', cursive;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 8px 20px rgba(44, 90, 160, 0.3);
+            transition: all 0.3s ease;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .buy-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(44, 90, 160, 0.4);
+            background: linear-gradient(135deg, #1e3a6f 0%, #2c5aa0 100%);
+        }
+
+        .buy-button:active {
+            transform: translateY(-1px);
         }
 
         @keyframes gradientShift {
@@ -307,6 +335,7 @@
             align-items: center;
             gap: 15px;
             margin: 10px 0;
+            margin-left: 50px;
         }
 
         .plane-route-icon {
@@ -405,6 +434,7 @@
 </head>
 <body>
     <h1 class="main-title">PLANE</h1>
+    <a href="https://pump.fun/board" class="buy-button">Buy your boarding pass now</a>
     
     <div class="boarding-pass">
         <div class="pass-header">
